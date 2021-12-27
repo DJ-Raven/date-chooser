@@ -5,6 +5,8 @@
  */
 package test;
 
+import com.raven.datechooser.EventDateChooser;
+import com.raven.datechooser.SelectedAction;
 import com.raven.datechooser.SelectedDate;
 import java.awt.Color;
 
@@ -20,6 +22,15 @@ public class Main extends javax.swing.JFrame {
     public Main() {
         initComponents();
         getContentPane().setBackground(new Color(240, 240, 240));
+        dateChooser.addEventDateChooser(new EventDateChooser() {
+            @Override
+            public void dateSelected(SelectedAction action, SelectedDate date) {
+                System.out.println(date.getDay() + "-" + date.getMonth() + "-" + date.getYear());
+                if (action.getAction() == SelectedAction.DAY_SELECTED) {
+                    dateChooser.hidePopup();
+                }
+            }
+        });
     }
 
     /**
@@ -31,30 +42,16 @@ public class Main extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        date = new com.raven.datechooser.DateChooser();
-        date2 = new com.raven.datechooser.DateChooser();
-        txtDate = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        dateChooser = new com.raven.datechooser.DateChooser();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         txtDate1 = new javax.swing.JTextField();
 
-        date.setForeground(new java.awt.Color(93, 142, 204));
-        date.setDateFormat("dd-MMMM-yyyy");
-        date.setTextRefernce(txtDate);
-
-        date2.setTextRefernce(txtDate1);
+        dateChooser.setTextRefernce(txtDate1);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jButton1.setText("...");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
 
         jButton2.setText("Now");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -92,10 +89,7 @@ public class Main extends javax.swing.JFrame {
                 .addGap(87, 87, 87)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(txtDate, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1)
-                        .addGap(154, 154, 154)
+                        .addGap(446, 446, 446)
                         .addComponent(jButton2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButton3)
@@ -112,8 +106,6 @@ public class Main extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(36, 36, 36)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1)
                     .addComponent(jButton2)
                     .addComponent(jButton3)
                     .addComponent(jButton4))
@@ -128,27 +120,23 @@ public class Main extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        date.showPopup();
-    }//GEN-LAST:event_jButton1ActionPerformed
-
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        date.toDay();
+        dateChooser.toDay();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        SelectedDate d = date.getSelectedDate();
+        SelectedDate d = dateChooser.getSelectedDate();
         System.out.println(d.getDay() + "-" + d.getMonth() + "-" + d.getYear());
-        System.out.println("Text : " + txtDate.getText());
+        System.out.println("Text : " + txtDate1.getText());
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        date.setSelectedDate(new SelectedDate(5, 10, 2022));
-        //  date.setSelectedDate(new Date());
+        dateChooser.setSelectedDate(new SelectedDate(5, 10, 2022));
+        //  dateChooser.setSelectedDate(new Date());
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        date2.showPopup();
+        dateChooser.showPopup();
     }//GEN-LAST:event_jButton5ActionPerformed
 
     /**
@@ -188,14 +176,11 @@ public class Main extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private com.raven.datechooser.DateChooser date;
-    private com.raven.datechooser.DateChooser date2;
-    private javax.swing.JButton jButton1;
+    private com.raven.datechooser.DateChooser dateChooser;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
-    private javax.swing.JTextField txtDate;
     private javax.swing.JTextField txtDate1;
     // End of variables declaration//GEN-END:variables
 }

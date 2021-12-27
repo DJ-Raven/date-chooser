@@ -8,7 +8,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
@@ -16,6 +18,10 @@ public final class DateChooser extends javax.swing.JPanel {
 
     public JTextField getTextRefernce() {
         return textRefernce;
+    }
+
+    public void addEventDateChooser(EventDateChooser event) {
+        events.add(event);
     }
 
     private JTextField textRefernce;
@@ -27,6 +33,7 @@ public final class DateChooser extends javax.swing.JPanel {
     private int STATUS = 1;   //  1 is day    2 is month  3 is year
     private int startYear;
     private SelectedDate selectedDate = new SelectedDate();
+    private List<EventDateChooser> events;
 
     public DateChooser() {
         initComponents();
@@ -35,8 +42,9 @@ public final class DateChooser extends javax.swing.JPanel {
 
     private void execute() {
         setForeground(new Color(204, 93, 93));
+        events = new ArrayList<>();
         popup.add(this);
-        toDay();
+        toDay(false);
     }
 
     public void setTextRefernce(JTextField txt) {
@@ -50,10 +58,10 @@ public final class DateChooser extends javax.swing.JPanel {
                 }
             }
         });
-        setText();
+        setText(false, 0);
     }
 
-    private void setText() {
+    private void setText(boolean runEvent, int act) {
         if (textRefernce != null) {
             try {
                 SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
@@ -62,6 +70,21 @@ public final class DateChooser extends javax.swing.JPanel {
             } catch (ParseException e) {
                 System.err.println(e);
             }
+        }
+        if (runEvent) {
+            runEvent(act);
+        }
+    }
+
+    private void runEvent(int act) {
+        SelectedAction action = new SelectedAction() {
+            @Override
+            public int getAction() {
+                return act;
+            }
+        };
+        for (EventDateChooser event : events) {
+            event.dateSelected(action, selectedDate);
         }
     }
 
@@ -73,7 +96,7 @@ public final class DateChooser extends javax.swing.JPanel {
             selectedDate.setDay(DAY);
             selectedDate.setMonth(MONTH);
             selectedDate.setYear(YEAR);
-            setText();
+            setText(true, 1);
             if (evt != null && evt.getClickCount() == 2 && SwingUtilities.isLeftMouseButton(evt)) {
                 popup.setVisible(false);
             }
@@ -86,7 +109,7 @@ public final class DateChooser extends javax.swing.JPanel {
             selectedDate.setDay(DAY);
             selectedDate.setMonth(MONTH);
             selectedDate.setYear(YEAR);
-            setText();
+            setText(true, 2);
             Dates d = new Dates();
             d.setForeground(getForeground());
             d.setEvent(getEventDay(d));
@@ -105,7 +128,7 @@ public final class DateChooser extends javax.swing.JPanel {
             selectedDate.setDay(DAY);
             selectedDate.setMonth(MONTH);
             selectedDate.setYear(YEAR);
-            setText();
+            setText(true, 3);
             Months d = new Months();
             d.setEvent(getEventMonth());
             if (slide.slideToDown(d)) {
@@ -116,7 +139,7 @@ public final class DateChooser extends javax.swing.JPanel {
         };
     }
 
-    public void toDay() {
+    private void toDay(boolean runEvent) {
         Dates dates = new Dates();
         dates.setForeground(getForeground());
         dates.setEvent(getEventDay(dates));
@@ -133,7 +156,11 @@ public final class DateChooser extends javax.swing.JPanel {
         slide.slideNon(dates);
         cmdMonth.setText(MONTH_ENGLISH[MONTH - 1]);
         cmdYear.setText(YEAR + "");
-        setText();
+        setText(runEvent, 0);
+    }
+
+    public void toDay() {
+        toDay(true);
     }
 
     private void setDateNext() {
@@ -180,6 +207,10 @@ public final class DateChooser extends javax.swing.JPanel {
 
     public void showPopup() {
         popup.show(textRefernce, 0, textRefernce.getHeight());
+    }
+
+    public void hidePopup() {
+        popup.setVisible(false);
     }
 
     @SuppressWarnings("unchecked")
@@ -445,7 +476,7 @@ public final class DateChooser extends javax.swing.JPanel {
         slide.slideNon(dates);
         cmdMonth.setText(MONTH_ENGLISH[MONTH - 1]);
         cmdYear.setText(YEAR + "");
-        setText();
+        setText(true, 0);
         STATUS = 1;
     }
 
@@ -478,7 +509,7 @@ public final class DateChooser extends javax.swing.JPanel {
         slide.slideNon(dates);
         cmdMonth.setText(MONTH_ENGLISH[MONTH - 1]);
         cmdYear.setText(YEAR + "");
-        setText();
+        setText(true, 0);
         STATUS = 1;
     }
 
@@ -487,7 +518,7 @@ public final class DateChooser extends javax.swing.JPanel {
         super.setForeground(color);
         if (header != null) {
             header.setBackground(color);
-            toDay();
+            toDay(false);
         }
     }
 }
